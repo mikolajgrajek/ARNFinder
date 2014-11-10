@@ -1,0 +1,6 @@
+.gradle
+.idea
+build
+output.html
+input.txt
+ARNFinder.iml
