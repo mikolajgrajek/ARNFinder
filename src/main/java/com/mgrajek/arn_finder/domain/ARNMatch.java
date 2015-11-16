@@ -1,12 +1,11 @@
 package com.mgrajek.arn_finder.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Data;
-
 import com.mgrajek.arn_finder.Nucleotide;
 import com.mgrajek.arn_finder.finder.MatchedNucleotide;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class ARNMatch implements Comparable {
@@ -28,26 +27,28 @@ public class ARNMatch implements Comparable {
     final String sequence = nucleotide.getSequence();
 
     switch (sequence.charAt(startIndex)) {
-    case 'A':
-      matched.add(MatchedNucleotide.A);
-      break;
-    case 'G':
-    case 'U':
-    case 'C':
-      matched.add(MatchedNucleotide.M);
-      usedMutations++;
-      break;
+      case 'A':
+        matched.add(MatchedNucleotide.A);
+        break;
+      case 'G':
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
     }
     switch (sequence.charAt(startIndex + 1)) {
-    case 'A':
-    case 'G':
-      matched.add(MatchedNucleotide.R);
-      break;
-    case 'U':
-    case 'C':
-      matched.add(MatchedNucleotide.M);
-      usedMutations++;
-      break;
+      case 'A':
+      case 'G':
+        matched.add(MatchedNucleotide.R);
+        break;
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
     }
     matched.add(MatchedNucleotide.N);
   }
