@@ -1,6 +1,7 @@
 package com.mgrajek.arn_finder.domain;
 
 import com.mgrajek.arn_finder.Nucleotide;
+import com.mgrajek.arn_finder.Sequence;
 import com.mgrajek.arn_finder.finder.MatchedNucleotide;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Data
 public class ARNMatch implements Comparable {
-  private Nucleotide nucleotide;
+  private Sequence nucleotide;
   private int startIndex;
   private int usedMutations;
   private List<MatchedNucleotide> matched = new ArrayList<>();
@@ -21,7 +22,7 @@ public class ARNMatch implements Comparable {
     this.matched.addAll(arnMatch.matched);
   }
 
-  public ARNMatch(Nucleotide nucleotide, int startIndex) {
+  public ARNMatch(Sequence nucleotide, int startIndex) {
     this.nucleotide = nucleotide;
     this.startIndex = startIndex;
     final String sequence = nucleotide.getSequence();
@@ -68,7 +69,11 @@ public class ARNMatch implements Comparable {
    */
   @SuppressWarnings("UnusedDeclaration")
   public String getName() {
-    return nucleotide.getName();
+    if (nucleotide instanceof Nucleotide) {
+      return nucleotide.getName();
+    } else {
+      return startIndex + ".." + (startIndex + matched.size());
+    }
   }
 
   /**

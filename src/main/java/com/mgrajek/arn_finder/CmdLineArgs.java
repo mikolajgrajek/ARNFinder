@@ -12,4 +12,10 @@ class CmdLineArgs {
 
   @Option(name = "-outputFile", usage = "html output file. Default: output.html")
   String outputFileName = "output.html";
+
+  @Option(name = "-minMatchLength", usage = "minimum length of matched sequence. Default 2")
+  int minMatchLength = 2;
+
+  @Option(name = "-overlayFilter", usage = "Removes overlayed sequences. In not specified - overlayed ARNs will be found.")
+  boolean overlayFilter = false;
 }

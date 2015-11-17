@@ -1,21 +1,21 @@
 package com.mgrajek.arn_finder.finder;
 
+import com.mgrajek.arn_finder.Sequence;
+import com.mgrajek.arn_finder.domain.ARNMatch;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mgrajek.arn_finder.Nucleotide;
-import com.mgrajek.arn_finder.domain.ARNMatch;
-
 class SingleSequenceMatchFinder {
 
-  private final Nucleotide nucleotide;
+  private final Sequence nucleotide;
   private final int matchIndex;
   private final int maxMutations;
   private final Map<String, ARNMatch> matchByIndexesKey = new HashMap<>();
 
-  public SingleSequenceMatchFinder(Nucleotide nucleotide, int matchIndex, int maxMutations) {
+  public SingleSequenceMatchFinder(Sequence nucleotide, int matchIndex, int maxMutations) {
     this.nucleotide = nucleotide;
     this.matchIndex = matchIndex;
     this.maxMutations = maxMutations;
@@ -43,14 +43,14 @@ class SingleSequenceMatchFinder {
   }
 
   private void addMatchToResults(ARNMatch matchCandidate) {
-    String key = matchCandidate.getStartIndex() + "_" + matchCandidate.getEndIndex();
+    String key = matchCandidate.getStartIndex() + ".." + matchCandidate.getEndIndex();
     final ARNMatch oldMatch = matchByIndexesKey.get(key);
     if (oldMatch == null || oldMatch.getUsedMutations() > matchCandidate.getUsedMutations()) {
       matchByIndexesKey.put(key, matchCandidate);
     }
   }
 
-  private ARNMatch matchRight(Nucleotide nucleotide, ARNMatch matchCandidate) {
+  private ARNMatch matchRight(Sequence nucleotide, ARNMatch matchCandidate) {
     if (matchCandidate.getEndIndex() + 3 >= nucleotide.length()) {
       return null;
     }

@@ -1,9 +1,9 @@
 package com.mgrajek.arn_finder.domain;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Data;
 
 @Data
 public class ARNMatchedGroup implements Comparable {
@@ -33,5 +33,9 @@ public class ARNMatchedGroup implements Comparable {
 
   public void add(ARNMatch singleMatch) {
     matches.add(singleMatch);
+  }
+
+  public int size() {
+    return matches.size();
   }
 }
