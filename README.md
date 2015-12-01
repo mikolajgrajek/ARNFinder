@@ -1,7 +1,7 @@
 ARNFinder
 =========
 
-finds ARN motifs in RNA nucleotidies
+finds ARN motifs in RNA nucleotides
 
 
 Required:
