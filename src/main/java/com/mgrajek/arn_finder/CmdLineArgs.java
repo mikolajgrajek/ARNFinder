@@ -16,6 +16,22 @@ class CmdLineArgs {
   @Option(name = "-minMatchLength", usage = "minimum length of matched sequence. Default 2")
   int minMatchLength = 2;
 
-  @Option(name = "-overlayFilter", usage = "Removes overlayed sequences. In not specified - overlayed ARNs will be found.")
-  boolean overlayFilter = false;
+  @Option(name = "-mask", usage = "mask used to match nucleotydes. Default ARN. Possible AAN, AGG")
+  String mask = "ARN";
+
+  @Option(name = "-overlapFilter", usage = "Removes overlapped sequences. In not specified - overlapped ARNs will be found.")
+  boolean overlapFilter = false;
+
+  public NucleotydesMask getNucleotydesMask() {
+    switch (mask) {
+      case "ARN":
+        return NucleotydesMask.ARN;
+      case "AAN":
+        return NucleotydesMask.AAN;
+      case "AGG":
+        return NucleotydesMask.AGG;
+      default:
+        throw new RuntimeException("cannot parse mask: " + mask);
+    }
+  }
 }

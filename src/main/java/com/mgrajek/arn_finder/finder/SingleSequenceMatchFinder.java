@@ -1,5 +1,6 @@
 package com.mgrajek.arn_finder.finder;
 
+import com.mgrajek.arn_finder.NucleotydesMask;
 import com.mgrajek.arn_finder.Sequence;
 import com.mgrajek.arn_finder.domain.ARNMatch;
 
@@ -13,19 +14,21 @@ class SingleSequenceMatchFinder {
   private final Sequence nucleotide;
   private final int matchIndex;
   private final int maxMutations;
+  private NucleotydesMask nucleotydesMask;
   private final Map<String, ARNMatch> matchByIndexesKey = new HashMap<>();
 
-  public SingleSequenceMatchFinder(Sequence nucleotide, int matchIndex, int maxMutations) {
+  public SingleSequenceMatchFinder(Sequence nucleotide, int matchIndex, int maxMutations, NucleotydesMask nucleotydesMask) {
     this.nucleotide = nucleotide;
     this.matchIndex = matchIndex;
     this.maxMutations = maxMutations;
+    this.nucleotydesMask = nucleotydesMask;
   }
 
   Collection<ARNMatch> findSequences() {
-    if (matchIndex + 1 >= nucleotide.length()) {
+    if (matchIndex + 2 >= nucleotide.length()) {
       return Collections.emptyList();
     }
-    final ARNMatch match = new ARNMatch(nucleotide, matchIndex);
+    final ARNMatch match = new ARNMatch(nucleotide, matchIndex, nucleotydesMask);
     findPossible(match);
     return matchByIndexesKey.values();
   }
@@ -54,7 +57,7 @@ class SingleSequenceMatchFinder {
     if (matchCandidate.getEndIndex() + 3 >= nucleotide.length()) {
       return null;
     }
-    ARNMatch nextTriplet = new ARNMatch(nucleotide, matchCandidate.getEndIndex() + 1);
+    ARNMatch nextTriplet = new ARNMatch(nucleotide, matchCandidate.getEndIndex() + 1, nucleotydesMask);
     return matchCandidate.copy().merge(nextTriplet);
   }
 

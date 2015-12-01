@@ -1,6 +1,7 @@
 package com.mgrajek.arn_finder.domain;
 
 import com.mgrajek.arn_finder.Nucleotide;
+import com.mgrajek.arn_finder.NucleotydesMask;
 import com.mgrajek.arn_finder.Sequence;
 import com.mgrajek.arn_finder.finder.MatchedNucleotide;
 import lombok.Data;
@@ -22,11 +23,25 @@ public class ARNMatch implements Comparable {
     this.matched.addAll(arnMatch.matched);
   }
 
-  public ARNMatch(Sequence nucleotide, int startIndex) {
+  public ARNMatch(Sequence nucleotide, int startIndex, NucleotydesMask nucleotydesMask) {
     this.nucleotide = nucleotide;
     this.startIndex = startIndex;
     final String sequence = nucleotide.getSequence();
 
+    switch (nucleotydesMask) {
+      case AAN:
+        matchAAN(sequence);
+        break;
+      case AGG:
+        matchAGG(sequence);
+        break;
+      case ARN:
+        matchARN(sequence);
+        break;
+    }
+  }
+
+  private void matchARN(String sequence) {
     switch (sequence.charAt(startIndex)) {
       case 'A':
         matched.add(MatchedNucleotide.A);
@@ -44,6 +59,73 @@ public class ARNMatch implements Comparable {
       case 'G':
         matched.add(MatchedNucleotide.R);
         break;
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
+    }
+    matched.add(MatchedNucleotide.N);
+  }
+
+  private void matchAGG(String sequence) {
+    switch (sequence.charAt(startIndex)) {
+      case 'A':
+        matched.add(MatchedNucleotide.A);
+        break;
+      case 'G':
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
+    }
+    switch (sequence.charAt(startIndex + 1)) {
+      case 'G':
+        matched.add(MatchedNucleotide.R);
+        break;
+      case 'A':
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
+    }
+    switch (sequence.charAt(startIndex + 2)) {
+      case 'G':
+        matched.add(MatchedNucleotide.R);
+        break;
+      case 'A':
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
+    }
+  }
+
+  private void matchAAN(String sequence) {
+    switch (sequence.charAt(startIndex)) {
+      case 'A':
+        matched.add(MatchedNucleotide.A);
+        break;
+      case 'G':
+      case 'U':
+      case 'T':
+      case 'C':
+        matched.add(MatchedNucleotide.M);
+        usedMutations++;
+        break;
+    }
+    switch (sequence.charAt(startIndex + 1)) {
+      case 'A':
+        matched.add(MatchedNucleotide.R);
+        break;
+      case 'G':
       case 'U':
       case 'T':
       case 'C':

@@ -26,12 +26,12 @@ public class ARNFinder {
       parser.printUsage(System.out);
     }
 
-    final File inputFile = new File(cmdLineArgs.fileName);
+    File inputFile = new File(cmdLineArgs.fileName);
     if (!inputFile.exists()) {
       log.error("inputFile doesn't exists: {}", inputFile);
       return;
     }
-    SimpleCombinationsFinder simpleCombinationsFinder = new SimpleCombinationsFinder(cmdLineArgs.maxMutations);
+    SimpleCombinationsFinder simpleCombinationsFinder = new SimpleCombinationsFinder(cmdLineArgs.maxMutations, cmdLineArgs.getNucleotydesMask());
     boolean genoFileLoaded = false;
     if (inputFile.getName().toLowerCase().endsWith("txt")) {
       final List<Nucleotide> nucleotides = loadNucleotides(inputFile);
@@ -47,8 +47,8 @@ public class ARNFinder {
 
     log.info("Min ARN match length set to: " + cmdLineArgs.minMatchLength);
     simpleCombinationsFinder.setMinTripletsMatched(cmdLineArgs.minMatchLength);
-    log.info("ARN OverlayFilter: " + cmdLineArgs.overlayFilter);
-    simpleCombinationsFinder.setOverlayedNotPossible(cmdLineArgs.overlayFilter);
+    log.info("ARN OverlayFilter: " + cmdLineArgs.overlapFilter);
+    simpleCombinationsFinder.setOverlayedNotPossible(cmdLineArgs.overlapFilter);
 
     ARNMatchedResult arnMatchedResult = simpleCombinationsFinder.getMatchResult();
 
@@ -63,6 +63,10 @@ public class ARNFinder {
     } else {
       try {
         File outputFile = new File(inputFile.getParentFile(), cmdLineArgs.outputFileName);
+        if (cmdLineArgs.overlapFilter) {
+          new OverlayOnlyFilter(arnMatchedResult).filter();
+        }
+        arnMatchedResult.printStats(new File(inputFile.getParentFile(), "output_stats.txt"));
         HtmlOutputPrinter.printToFile(arnMatchedResult, outputFile);
       } catch (IOException e) {
         e.printStackTrace();

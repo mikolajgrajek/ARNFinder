@@ -45,13 +45,14 @@ public class ARNMatchedResult {
   public void printStats(File outputFile) {
     System.out.println("Matches size: " + size());
     for (ARNMatchedGroup group : getGroups()) {
-      System.out.println("L" + group.getMatchedLength() + "M" + group.getMutationsCount() + ": " + group.size());
+      System.out.println("L" + (group.getMatchedLength() * 3) + "M" + group.getMutationsCount() + ": " + group.size());
     }
     if (outputFile != null) {
       try (PrintWriter pw = new PrintWriter(outputFile)) {
         for (ARNMatchedGroup group : getGroups()) {
           for (ARNMatch match : group.getMatches()) {
-            pw.write("L" + match.getMatchedSize() + "M" + match.getUsedMutations() + ": " + match.getStartIndex() + ".." + match.getEndIndex());
+            pw.write("L" + match.getMatchedSize() + "M" + match.getUsedMutations() + ": " + match.getStartIndex() + ".." + match.getEndIndex() +
+                " [" + match.getMatchedSequence() + "]\n");
           }
         }
       } catch (FileNotFoundException e) {

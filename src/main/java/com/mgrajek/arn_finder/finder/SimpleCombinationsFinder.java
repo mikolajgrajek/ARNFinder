@@ -1,5 +1,6 @@
 package com.mgrajek.arn_finder.finder;
 
+import com.mgrajek.arn_finder.NucleotydesMask;
 import com.mgrajek.arn_finder.Sequence;
 import com.mgrajek.arn_finder.domain.ARNMatch;
 import com.mgrajek.arn_finder.domain.ARNMatchedGroup;
@@ -12,12 +13,14 @@ import java.util.*;
 @Slf4j
 public class SimpleCombinationsFinder {
   private final int maxMutations;
+  private NucleotydesMask nucleotydesMask;
   private final Map<String, ARNMatchedGroup> groupByKey = new HashMap<>();
   private int minTripletsMatched;
   private boolean overlayedNotPossible;
 
-  public SimpleCombinationsFinder(int maxMutations) {
+  public SimpleCombinationsFinder(int maxMutations, NucleotydesMask nucleotydesMask) {
     this.maxMutations = maxMutations;
+    this.nucleotydesMask = nucleotydesMask;
   }
 
   public List<ARNMatchedGroup> findPossibleARNCombinations(Sequence nucleotide) {
@@ -56,7 +59,7 @@ public class SimpleCombinationsFinder {
   }
 
   private void findAllMatches(Sequence nucleotide, Integer startIndex) {
-    SingleSequenceMatchFinder finder = new SingleSequenceMatchFinder(nucleotide, startIndex, maxMutations);
+    SingleSequenceMatchFinder finder = new SingleSequenceMatchFinder(nucleotide, startIndex, maxMutations, nucleotydesMask);
     Collection<ARNMatch> singleMatch = finder.findSequences();
     if (singleMatch.isEmpty()) {
       return;
